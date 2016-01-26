@@ -5,7 +5,7 @@
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle/  
 PATH=$JAVA_HOME/bin:$PATH  
 export PATH  
-CATALINA_HOME=/opt/tomcat  
+CATALINA_HOME={{TOMCAT_INST_PATH}}  
   
 case $1 in  
 start)  
