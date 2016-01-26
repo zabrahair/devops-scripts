@@ -1,0 +1,11 @@
+---
+
+- hosts: all-servers
+  vars:
+    - WelcomeMsg: "Welcome to this demo."
+    - AnotherVar: "Just Another Variable"
+  tasks:
+    - name: Setup Nginx
+      apt: pkg=nginx state=installed update_cache=true
+    - name: Copy index.html file 
+      template: src=index.html.j2 dest=/usr/share/nginx/html/index.html

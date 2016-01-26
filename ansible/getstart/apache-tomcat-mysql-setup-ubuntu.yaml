@@ -1,0 +1,21 @@
+---
+
+- hosts: center-servers
+  vars:
+    - WelcomeMsg: "Welcome to this demo."
+    - AnotherVar: "Just Another Variable"
+  tasks:   
+    - name: Setup Privoxy
+      apt: pkg=privoxy state=installed update_cache=true
+      sudo: true   
+    - name: Setup Python-software-properties                               
+      apt: pkg=python-software-properties state=installed update_cache=true
+#    - name: Add Java PPA to Repository
+#      apt_repository: repo='ppa:webupd8team/java' state=present
+#      when: java_needs_oracle
+#      register: webupd8ppa
+#      until: webupd8ppa|success
+#      retries: 5
+#      delay: 10
+#    - name: Setup JDK 1.8
+#      apt: pkg=oracle-java8-installer state=installed update_cache=true

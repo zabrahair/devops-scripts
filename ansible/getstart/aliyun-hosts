@@ -1,0 +1,17 @@
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+
+[all-servers]
+121.42.183.114
+120.27.120.154
+
+[center-servers]
+121.42.183.114
+
+
+
+[nodes-servers]
+120.27.120.154
+
+
