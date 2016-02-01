@@ -1,0 +1,27 @@
+---
+
+- name: Manage Git Access Accounts in local git repository
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  become_user: mac
+  vars:
+    - local_repo_path: "~/Documents/workspaces/test-git-admins/"
+    - gitosis_git_url: "git@52.34.219.157:gitosis-admin.git"
+    - gitosis_repo_nm: "gitosis-admin"
+  tasks:
+    - name: Create Gitosis local clone path
+      file: path="{{local_repo_path}}" state=directory
+    - name: Clone gitosis-admin.git
+      git: 
+        repo="{{gitosis_git_url}}"
+        dest="{{local_repo_path}}"
+    - name: Show gitosis.conf
+      args:
+        chdir: "{{local_repo_path}}"
+      command: cat "gitosis.conf"
+      register: gitosis_out
+    - debug: msg="{{ item }}"
+      with_items:
+        - "{{gitosis_out.stdout}}"
+        - "{{gitosis_out.stderr}}"

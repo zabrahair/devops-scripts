@@ -1,0 +1,6 @@
+---
+
+- include_vars: general_vars.yml
+
+- name: Install python-apt
+  apt: pkg=python-apt

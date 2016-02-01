@@ -1,0 +1,100 @@
+---
+
+- name: Setup Git and Gollum Markdown Wiki
+  hosts: test-servers
+  gather_facts: no
+  sudo: yes
+  vars:
+    - HOSTNAME: "AWS-TEST-SERVER"
+    - usr_for_git: "git"
+    - usr_pwd_for_git: "pas2Wang"
+    - global_git_usr: "deanwang"
+    - global_git_usr_email: "wzq@systec.com.cn"
+    - gitosis_dir_nm: "gitosis"
+  tasks:
+    - name: Install Default Packages
+      apt: pkg=id-utils state=installed update_cache=true
+      apt: pkg=openssh-server state=installed update_cache=true
+      apt: pkg=openssh-client state=installed update_cache=true
+      apt: pkg=python-setuptools state=installed update_cache=true
+    - name: Install Git Packages
+      apt: pkg=git-core state=installed update_cache=true
+      apt: pkg=git-daemon-run state=installed update_cache=true
+
+
+    - name: Create Git Group
+      group: name=git state=present
+    - name: Create Git User 
+      user: name=git group=git state=present createhome=yes password={{usr_pwd_for_git}}
+    - name: Config Global User of Git 
+      become: yes
+      become_user: git
+      command: git config --global user.name "{{global_git_usr}}"
+      command: git config --global user.email "{{global_git_usr_email}}"
+    - name: Clone Gitosis Package
+      become: yes
+      become_user: git
+      git: repo=https://github.com/res0nat0r/gitosis.git dest=/home/{{usr_for_git}}/{{gitosis_dir_nm}}
+    - name: Show Current User
+      command: id
+      register: out
+    - debug: msg="{{out.stdout}}"
+    - name: Install Gitosis
+      command: python setup.py install
+      args:
+        chdir:  /home/{{usr_for_git}}/gitosis
+
+
+    - name: Generate SSH key-pair
+      stat: path=/home/{{usr_for_git}}/.ssh/id_rsa
+      register: idrsa_state
+    - debug: msg="idrsa_state is {{ idrsa_state.stat.exists }}"
+    - debug: msg="id_rsa is not existed"
+      when: idrsa_state.stat.exists == False
+    - command: ssh-keygen -t rsa -f /home/{{usr_for_git}}/.ssh/id_rsa -q -N ""
+      become: yes
+      become_user: git
+      when: idrsa_state.stat.exists == False
+    - debug: msg="id_rsa key-pair is existed."
+      when: idrsa_state.stat.exists == True
+    - file: path=/home/{{usr_for_git}}/.ssh/authorized_keys owner=git group=git mode=0644 state=touch
+    - command: cat /home/{{usr_for_git}}/.ssh/id_rsa.pub >> /home/{{usr_for_git}}/.ssh/authorized_keys
+      args:
+        creates: /home/{{usr_for_git}}/.ssh/authorized_keys
+
+
+    - name: Copy local id_rsa.pub to Git Server Path /tmp/
+      copy: src=~/.ssh/id_rsa.pub dest=/tmp/gitosis_idrsa.pub
+    - name: Gitosis Initial 
+      become: yes
+      become_user: git
+      shell: "gitosis-init < /tmp/gitosis_idrsa.pub"
+      register: gitinit_out
+    - debug: msg="{{ item }} "
+      with_items: 
+        - "{{ gitinit_out.stdout }} "
+        - "{{ gitinit_out.stderr }}"
+    - name: Delete The public key
+      file: path=/tmp/gitosis_idrsa.pub state=absent
+    - name: Change Access Permission of Git Repo
+      file: 
+        path="/home/{{usr_for_git}}/repositories" 
+        owner=git 
+        group=git 
+        mode=0755 
+        state=directory 
+        recurse=yes
+
+- name: Create a Test Repo
+  hosts: test-servers
+  gather_facts: no
+  become: yes
+  become_user: git
+  vars:
+    - repo_name: "test.git"
+    - repo_path: "~/repositories"
+  tasks:
+    - name: Create a Bare repository named test.git
+      command: git init --bare test.git
+      args:
+       chdir: "{{ repo_path }}"

@@ -1,0 +1,104 @@
+var proxyTraffic = "PROXY 127.0.0.1:1984; HTTPS 127.0.0.1:1984; DIRECT; SOCKS 127.0.0.1:7070; SOCKS5 127.0.0.1:7070";
+var defaultTraffic = "DIRECT";
+function FindProxyForURL(url, host) {
+	if (host == "localhost"
+		|| shExpMatch(host, "localhost.*")
+		|| host == "127.0.0.1")
+		return defaultTraffic;
+			
+	else if (shExpMatch(host, "*ssl.gstatic.com*")
+		||shExpMatch(host, "*www.gstatic.com*"))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*google*")
+		|| shExpMatch(host, "*ggpht*")
+		|| shExpMatch(host, "*gstatic*")
+		|| shExpMatch(host, "*gmail*")
+		|| shExpMatch(host, "*google-analytics*")
+		|| dnsDomainIs(host, '*gtimg*'))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*youtube*")
+		|| shExpMatch(host, "*ytimg*")
+		|| shExpMatch(host, "*googlevideo*")
+		|| shExpMatch(host, "*ggpht*"))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*twitter*")
+		|| shExpMatch(host, "*fbcdn.net*")
+		|| shExpMatch(host, "*facebook*")
+		|| shExpMatch(host, "*zedo*")
+		|| shExpMatch(host, "*cloudflare*"))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*wordpress*")
+		|| shExpMatch(url, "*videos.com*")
+		|| shExpMatch(host, "*.wikipedia.org*")
+		|| shExpMatch(host, '*xbox.com*')
+		|| shExpMatch(host, '*store.apple*')
+		|| shExpMatch(host, '*paypal*')
+		|| shExpMatch(host, '*cloudarchitectmusings*')
+		|| shExpMatch(host, '*openstack.org*')
+		|| shExpMatch(host, '*aws.amazon*')
+		|| shExpMatch(host, '*vcloud.vmware*')
+		|| shExpMatch(host, '*wistia.net*')
+		|| shExpMatch(host, '*slideshare.net*')
+//ADD NEW PATTERN
+|| shExpMatch(host, '*aws.amazon.com*')
+		|| shExpMatch(host, '*lalulalu*'))
+		return proxyTraffic;
+		
+	return defaultTraffic;
+};
+var proxyTraffic = "PROXY 127.0.0.1:1984; HTTPS 127.0.0.1:1984; DIRECT; SOCKS 127.0.0.1:7070; SOCKS5 127.0.0.1:7070";
+var defaultTraffic = "DIRECT";
+function FindProxyForURL(url, host) {
+	if (host == "localhost"
+		|| shExpMatch(host, "localhost.*")
+		|| host == "127.0.0.1")
+		return defaultTraffic;
+			
+	else if (shExpMatch(host, "*ssl.gstatic.com*")
+		||shExpMatch(host, "*www.gstatic.com*"))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*google*")
+		|| shExpMatch(host, "*ggpht*")
+		|| shExpMatch(host, "*gstatic*")
+		|| shExpMatch(host, "*gmail*")
+		|| shExpMatch(host, "*google-analytics*")
+		|| dnsDomainIs(host, '*gtimg*'))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*youtube*")
+		|| shExpMatch(host, "*ytimg*")
+		|| shExpMatch(host, "*googlevideo*")
+		|| shExpMatch(host, "*ggpht*"))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*twitter*")
+		|| shExpMatch(host, "*fbcdn.net*")
+		|| shExpMatch(host, "*facebook*")
+		|| shExpMatch(host, "*zedo*")
+		|| shExpMatch(host, "*cloudflare*"))
+			return proxyTraffic;
+			
+	else if (shExpMatch(host, "*wordpress*")
+		|| shExpMatch(url, "*videos.com*")
+		|| shExpMatch(host, "*.wikipedia.org*")
+		|| shExpMatch(host, '*xbox.com*')
+		|| shExpMatch(host, '*store.apple*')
+		|| shExpMatch(host, '*paypal*')
+		|| shExpMatch(host, '*cloudarchitectmusings*')
+		|| shExpMatch(host, '*openstack.org*')
+		|| shExpMatch(host, '*aws.amazon*')
+		|| shExpMatch(host, '*vcloud.vmware*')
+		|| shExpMatch(host, '*wistia.net*')
+		|| shExpMatch(host, '*slideshare.net*')
+//ADD NEW PATTERN
+|| shExpMatch(host, '*aws.amazon.com*')
+		|| shExpMatch(host, '*lalulalu*'))
+		return proxyTraffic;
+		
+	return defaultTraffic;
+};

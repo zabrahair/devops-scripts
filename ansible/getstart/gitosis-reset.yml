@@ -1,0 +1,30 @@
+---
+
+- name: Reset Git Environment
+  hosts: test-servers
+  gather_facts: no
+  become: yes
+  become_user: root
+  vars:
+    - HOSTNAME: "AWS-TEST-SERVER"
+    - usr_for_git: "git"
+    - usr_pwd_for_git: "pas2Wang"
+    - global_git_usr: "deanwang"
+    - global_git_usr_email: "wzq@systec.com.cn"
+    - gitosis_dir_nm: "gitosis"
+  tasks:
+    - name: Install Default Packages
+      apt: pkg=id-utils state=absent update_cache=true
+      apt: pkg=openssh-server state=absent update_cache=true
+      apt: pkg=openssh-client state=absent update_cache=true
+      apt: pkg=python-setuptools state=absent update_cache=true
+    - name: Install Git Packages
+      apt: pkg=git-core state=absent update_cache=true
+      apt: pkg=git-daemon-run state=absent update_cache=true
+    - name: Remove Home Dir for Git User
+      file: path=/home/{{usr_for_git}} state=absent 
+    - name: Remove User of Git
+      user: name={{usr_for_git}} remove=yes state=absent
+    - group: name={{usr_for_git}} state=absent
+    
+
