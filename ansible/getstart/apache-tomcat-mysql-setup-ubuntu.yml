@@ -1,49 +1,55 @@
 ---
-- name: General Configuration
-	vars:
-		- DEFAULT_HOSTS: center-servers
-		- GATHER_FACTS: no
 
-- name: Setup Apache2 +JDK1.8 + Tomcat8
-	hosts: {{DEFAULT_HOSTS}}
-	gather_facts: {{GATHER_FACTS}}
-	vars:
-		- TOMCAT_VERSION: "8.0.30"
-		- TOMCAT_INST_PATH: "/opt/tomcat8"
-	tasks:
-		- name: Remove and Purge Python-software-properties
-			apt: pkg=python-software-properties state=absent update_cache=true purge=yes
-		- name: Setup Python-software-properties
-			apt: pkg=python-software-properties state=present update_cache=true
-		- name: Add Java PPA to Repository
-			apt_repository: repo='ppa:webupd8team/java' state=present
-		- name: Automatically select the Oracle License
-			shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-		- name: Setup JDK 1.8
-			apt: pkg=oracle-java8-installer state=installed update_cache=true force=yes
-		- name: Remove and Purge Ngnix
-			apt: pkg=nginx state=absent update_cache=true force=yes
-		- name: Setup JDK Env Variables
-			shell: echo "export JAVA_HOME=/usr/lib/jvm/java-8-oracle/" >> ~/.bashrc;echo "export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre/" >> ~/.bashrc;. ~/.bashrc
-		- name: Setup Apache2
-			apt: pkg=apache2 state=installed update_cache=true force=yes
-		- name: Config Apache2 start at boot.
-			service: name=apache2 enabled=yes
-		- name: Download Tomcat8 and Extract
-			shell: rm /opt/opt/apache-tomcat.tar.gz;wget http://www.apache.org/dist/tomcat/tomcat-8/v{{TOMCAT_VERSION}}/bin/apache-tomcat-{{TOMCAT_VERSION}}.tar.gz -O /opt/apache-tomcat.tar.gz; tar -xvf /opt/apache-tomcat.tar.gz -C /opt/; mv /opt/apache-tomcat-{{TOMCAT_VERSION}} {{TOMCAT_INST_PATH}};chmod 755 -R {{TOMCAT_INST_PATH}}
-			sudo: yes
-		- name: Setup Tomcat Env
-			shell: echo "export CATALINA_HOME={{TOMCAT_INST_PATH}}/" >> ~/.bashrc;. ~/.bashrc
-		- name: Create Tomcat Service Deamon Script
-			template: src=tomcat-deamon.sh dest=/etc/init.d/tomcat owner=root group=root mode=755 backup=yes
-			sudo: yes
-			
-- name: Setup Ansible Tool
-	hosts: {{DEFAULT_HOSTS}}
-	gather_facts: {{GATHER_FACTS}}
-	vars:
-	tasks:
-		- name: Install Ansible Tool
-			apt: pkg=ansible state=installed update_cache=true
-	
-	
+- vars_files: 
+  - general_vars.yml
+
+- name: "Test Vars"
+
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Echo the vars
+      debug: msg="Mosh Version {{ DEFAULT_HOSTS }}"
+
+- name: "Setup Apache Tomcat JDK"
+  hosts: test-servers
+  gather_facts: no
+  sudo: yes
+  vars:
+    - TOMCAT_VERSION: "8.0.30"
+    - TOMCAT_INST_PATH: "/opt/tomcat8"
+  tasks:
+    - name: Remove and Purge Python-software-properties
+      apt: pkg=python-software-properties state=absent update_cache=true purge=yes
+    - name: Setup Python-software-properties
+      apt: pkg=python-software-properties state=present update_cache=true
+    - name: Add Java PPA to Repository
+      apt_repository: repo='ppa:webupd8team/java' state=present
+    - name: Automatically select the Oracle License
+      shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+    - name: Setup JDK 1.8
+      apt: pkg=oracle-java8-installer state=installed update_cache=true force=yes
+    - name: Remove and Purge Ngnix
+      apt: pkg=nginx state=absent update_cache=true force=yes
+    - name: Setup JDK Env Variables
+      shell: echo "export JAVA_HOME=/usr/lib/jvm/java-8-oracle/" >> ~/.bashrc;echo "export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre/" >> ~/.bashrc;. ~/.bashrc
+    - name: Setup Apache2
+      apt: pkg=apache2 state=installed update_cache=true force=yes
+    - name: Config Apache2 start at boot.
+      service: name=apache2 enabled=yes
+    - name: Download Tomcat8 and Extract
+      shell: rm /opt/opt/apache-tomcat.tar.gz;wget http://www.apache.org/dist/tomcat/tomcat-8/v{{TOMCAT_VERSION}}/bin/apache-tomcat-{{TOMCAT_VERSION}}.tar.gz -O /opt/apache-tomcat.tar.gz; tar -xvf /opt/apache-tomcat.tar.gz -C /opt/; mv /opt/apache-tomcat-{{TOMCAT_VERSION}} {{TOMCAT_INST_PATH}};chmod 755 -R {{TOMCAT_INST_PATH}}
+    - name: Setup Tomcat Env
+      shell: echo "export CATALINA_HOME={{TOMCAT_INST_PATH}}/" >> ~/.bashrc;. ~/.bashrc
+    - name: Create Tomcat Service Deamon Script
+      template: src=tomcat-deamon.sh dest=/etc/init.d/tomcat owner=root group=root mode=755 backup=yes
+
+  
+- name: "Setup Ansible Tool"
+  hosts: test-servers
+  gather_facts: no
+  sudo: yes
+  tasks:
+  - name: Install Ansible Tool
+    apt: pkg=ansible state=installed update_cache=true
+    
