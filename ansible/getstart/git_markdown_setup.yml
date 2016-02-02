@@ -4,6 +4,7 @@
   hosts: test-servers
   gather_facts: no
   sudo: yes
+#  ignore_errors: True
   vars:
     - HOSTNAME: "AWS-TEST-SERVER"
     - usr_for_git: "git"
@@ -11,72 +12,105 @@
     - global_git_usr: "deanwang"
     - global_git_usr_email: "wzq@systec.com.cn"
     - gitosis_dir_nm: "gitosis"
+    - git_repo_root: "repositories"
+    - gollum_repo_nm: "gollum-wiki.git"
   tasks:
     - name: Install Default Packages
-      apt: pkg=id-utils state=installed update_cache=true
-      apt: pkg=openssh-server state=installed update_cache=true
-      apt: pkg=openssh-client state=installed update_cache=true
-      apt: pkg=python-setuptools state=installed update_cache=true
+      tags: gitosis git
+      apt: pkg={{item}} state=installed update_cache=true
+      with_items:
+        - id-utils
+        - openssh-client
+        - python-setuptools
+        
     - name: Install Git Packages
-      apt: pkg=git-core state=installed update_cache=true
-      apt: pkg=git-daemon-run state=installed update_cache=true
-
-
+      tags: gitosis git
+      apt: pkg={{item}} state=installed update_cache=true
+      with_items:
+        - git-core
+        - git-daemon-run
+    
+        
     - name: Create Git Group
+      tags: git
       group: name=git state=present
+      
     - name: Create Git User 
+      tags: git
       user: name=git group=git state=present createhome=yes password={{usr_pwd_for_git}}
+      
     - name: Config Global User of Git 
+      tags: git
       become: yes
       become_user: git
       command: git config --global user.name "{{global_git_usr}}"
       command: git config --global user.email "{{global_git_usr_email}}"
+      
     - name: Clone Gitosis Package
+      tags: gitosis
       become: yes
       become_user: git
       git: repo=https://github.com/res0nat0r/gitosis.git dest=/home/{{usr_for_git}}/{{gitosis_dir_nm}}
+      
     - name: Show Current User
+      tags: gitosis
       command: id
       register: out
     - debug: msg="{{out.stdout}}"
+      tags: gitosis
+    
     - name: Install Gitosis
+      tags: gitosis
       command: python setup.py install
       args:
         chdir:  /home/{{usr_for_git}}/gitosis
 
 
     - name: Generate SSH key-pair
+      tags: gitosis
       stat: path=/home/{{usr_for_git}}/.ssh/id_rsa
       register: idrsa_state
     - debug: msg="idrsa_state is {{ idrsa_state.stat.exists }}"
+      tags: gitosis
     - debug: msg="id_rsa is not existed"
+      tags: gitosis
       when: idrsa_state.stat.exists == False
     - command: ssh-keygen -t rsa -f /home/{{usr_for_git}}/.ssh/id_rsa -q -N ""
+      tags: gitosis
       become: yes
       become_user: git
       when: idrsa_state.stat.exists == False
     - debug: msg="id_rsa key-pair is existed."
+      tags: gitosis
       when: idrsa_state.stat.exists == True
     - file: path=/home/{{usr_for_git}}/.ssh/authorized_keys owner=git group=git mode=0644 state=touch
+      tags: gitosis
     - command: cat /home/{{usr_for_git}}/.ssh/id_rsa.pub >> /home/{{usr_for_git}}/.ssh/authorized_keys
+      tags: gitosis
       args:
         creates: /home/{{usr_for_git}}/.ssh/authorized_keys
 
 
     - name: Copy local id_rsa.pub to Git Server Path /tmp/
+      tags: gitosis
       copy: src=~/.ssh/id_rsa.pub dest=/tmp/gitosis_idrsa.pub
+      
     - name: Gitosis Initial 
+      tags: gitosis
       become: yes
       become_user: git
       shell: "gitosis-init < /tmp/gitosis_idrsa.pub"
       register: gitinit_out
     - debug: msg="{{ item }} "
+      tags: gitosis
       with_items: 
         - "{{ gitinit_out.stdout }} "
         - "{{ gitinit_out.stderr }}"
     - name: Delete The public key
+      tags: gitosis
       file: path=/tmp/gitosis_idrsa.pub state=absent
     - name: Change Access Permission of Git Repo
+      tags: gitosis
       file: 
         path="/home/{{usr_for_git}}/repositories" 
         owner=git 
@@ -84,6 +118,44 @@
         mode=0755 
         state=directory 
         recurse=yes
+        
+            
+    - name: Install necessary packages for Gollum
+      tags: gollum
+      apt: pkg={{item}} state=installed update_cache=true
+      with_items:
+        - apache2
+        - ruby
+        - ruby-dev
+        - make
+        - build-essential
+        - libiconv*
+        - libicu-dev
+        - zlib1g-dev
+        
+    - name: Install Gollum(Git Wiki)
+      tags: gollum
+      gem: name=gollum state=present user_install=no include_dependencies=yes
+    - command: gollum --v
+      tags: gollum
+      register: version_out
+    - debug: msg={{item}}
+      tags: gollum
+      with_items: 
+        - "{{version_out.stdout}}"
+        - "{{version_out.stderr}}"
+
+    - name: Create Gollum Wiki Repository
+      tags: gollum
+      become: yes
+      become_user: git
+      command: git init /home/{{usr_for_git}}/{{git_repo_root}}/{{gollum_repo_nm}}
+      register: output
+    - debug: msg={{output.stdout}}
+      tags: gollum
+
+
+
 
 - name: Create a Test Repo
   hosts: test-servers
