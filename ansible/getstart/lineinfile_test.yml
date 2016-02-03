@@ -1,0 +1,41 @@
+---
+
+- name: Test Lineinfile Module Static IP
+  tags: static_ip
+  hosts: localhost
+  gather_facts: no
+  vars:
+  tasks:
+  - lineinfile:
+      dest=a.txt
+      backup=yes
+      create=yes
+      backrefs=yes
+      state="{{item.state}}"
+      regexp="^(iface eth0 inet (dynamic|dhcp))"
+      line="{{item.line}}"
+    #\1 is a regexp capture group
+    with_items:
+    - {state: 'present', line: '#\1
+    \niface eth0 inet static
+    \n    address 192.168.16.114
+    \n    mask 255.255.255.255
+    \n    gateway 192.168.16.1'}
+
+     
+    
+- name: Test Lineinfile Module RegExp
+  tags: basic
+  hosts: localhost
+  gather_facts: no
+  vars:
+  tasks:
+  - lineinfile:
+      dest=a.txt
+      backup=yes
+      create=yes
+      state="{{item.state}}"
+      regexp="{{item.regexp}}"
+      line="{{item.line}}"
+    with_items:
+    - {state: 'present', line: '#iface eth0 inet dynamic', regexp: '^$'}

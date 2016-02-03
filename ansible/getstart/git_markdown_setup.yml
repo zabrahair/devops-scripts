@@ -6,14 +6,6 @@
   sudo: yes
 #  ignore_errors: True
   vars:
-    - HOSTNAME: "AWS-TEST-SERVER"
-    - usr_for_git: "git"
-    - usr_pwd_for_git: "pas2Wang"
-    - global_git_usr: "deanwang"
-    - global_git_usr_email: "wzq@systec.com.cn"
-    - gitosis_dir_nm: "gitosis"
-    - git_repo_root: "repositories"
-    - gollum_repo_nm: "gollum-wiki.git"
   tasks:
     - name: Install Default Packages
       tags: gitosis git
