@@ -1,6 +1,6 @@
 ---
 
-- name: Set Server Static IP
+- name: Set Host Static IP
   hosts: test-servers
   gather_facts: no
   vars:

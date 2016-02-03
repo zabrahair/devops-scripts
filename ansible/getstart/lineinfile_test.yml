@@ -14,7 +14,7 @@
       state="{{item.state}}"
       regexp="^(iface eth0 inet (dynamic|dhcp))"
       line="{{item.line}}"
-    #\1 is a regexp capture group
+    #\1 is a regexp capture groups
     with_items:
     - {state: 'present', line: '#\1
     \niface eth0 inet static
