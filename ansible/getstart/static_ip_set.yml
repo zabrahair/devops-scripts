@@ -1,0 +1,9 @@
+---
+
+- name: Set Server Static IP
+  host: test-servers
+  gather_facts: no
+  vars:
+  sudo: yes
+  tasks:
+  
