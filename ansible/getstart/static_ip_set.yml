@@ -4,6 +4,15 @@
   host: test-servers
   gather_facts: no
   vars:
-  sudo: yes
   tasks:
-  
+  - name: Edit Network Interface Config File
+    sudo: yes
+    lineinfile: 
+      dest=/etc/network/interfaces 
+      backup=yes
+      create=yes
+      state=present
+      regex="iface eth0 inet dynamic"
+      line="#iface eth0 inet dynamic"
+      insertafter="iface eth0 inet static"
+    
