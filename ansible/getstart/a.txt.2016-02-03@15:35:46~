@@ -1,0 +1,3 @@
+iface eth0 inet dynamic
+
+iface eth0 inet static

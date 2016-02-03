@@ -1,18 +1,27 @@
 ---
 
 - name: Set Server Static IP
-  host: test-servers
+  hosts: test-servers
   gather_facts: no
   vars:
   tasks:
   - name: Edit Network Interface Config File
     sudo: yes
-    lineinfile: 
-      dest=/etc/network/interfaces 
+    lineinfile:
+      dest=/etc/network/interfaces
       backup=yes
       create=yes
-      state=present
-      regex="iface eth0 inet dynamic"
-      line="#iface eth0 inet dynamic"
-      insertafter="iface eth0 inet static"
+      backrefs=yes
+      state="{{item.state}}"
+      regexp="^(iface eth0 inet (dynamic|dhcp))"
+      line="{{item.line}}"
+    with_items:
+    - {state: 'present', line: '#\1
+    \niface eth0 inet static
+    \n    address 192.168.16.114
+    \n    mask 255.255.255.255
+    \n    gateway 192.168.16.1'}
     
+  - name: Restart Network Service
+    sudo: yes
+    service: name=networking state=restarted
