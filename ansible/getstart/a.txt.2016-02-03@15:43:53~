@@ -1,8 +1,0 @@
-aaaaa
-
-iface eth0 inet static
-iface eth0 inet dynamic
-    address 192.168.16.114
-aaaa
-    netmask 255.255.255.0
-    gateway 192.168.16.1

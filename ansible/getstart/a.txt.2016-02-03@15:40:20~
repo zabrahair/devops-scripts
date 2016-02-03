@@ -1,3 +1,0 @@
-iface eth0 inet dynamic
-
-    gateway 192.168.16.1
