@@ -1,0 +1,15 @@
+---
+
+- name: Create Ansible Project Structure
+  hosts: localhost
+  gather_facts: no
+  vars:
+    - root_path="./"
+    - project_name="demo_ansible_project"
+    - roles:
+      - "ubuntu"
+      - "centos"
+      - "windows"
+  tasks:
+    - name: Create Project Directory
+      file: path="{{root_path}}{{demo_ansible_project}}" state=directory
