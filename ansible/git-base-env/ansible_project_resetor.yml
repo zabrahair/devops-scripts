@@ -4,8 +4,8 @@
   hosts: localhost
   gather_facts: no
   vars:
-    - root_path="./"
-    - project_name="demo_ansible_project"
+    - root_path: "./"
+    - project_name: "demo_ansible_project"
     - roles:
       - "ubuntu"
       - "centos"
@@ -13,4 +13,5 @@
   tasks:
     - name: Remove project folder
       file: path="{{root_path}}{{project_name}}" state=absent
+
   

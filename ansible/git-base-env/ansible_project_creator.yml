@@ -4,12 +4,53 @@
   hosts: localhost
   gather_facts: no
   vars:
-    - root_path="./"
-    - project_name="demo_ansible_project"
-    - roles:
-      - "ubuntu"
-      - "centos"
-      - "windows"
+  # Vairables for User Define
+  - root_path: "./"
+  - project_name: "demo_ansible_project"
+  - roles:
+    - 'ubuntu'
+    - 'centos'
+    - 'windows'
+  # Variables for Project rules
+  - role_sub_dirs: 
+    - ""
+    - "tasks"
+    - "handlers"
+    - "templates"
+    - "files"
+    - "vars"
+    - "defaults"
+    - "meta"
+  - files_in_role_sub_dirs:
+    - 'main.yml'
   tasks:
-    - name: Create Project Directory
-      file: path="{{root_path}}{{demo_ansible_project}}" state=directory
+    - name: Create Project Directory and 1 level directories.
+      file: path="{{root_path}}{{project_name}}{{item.path}}" state="{{item.state}}"
+      with_items:
+      - {path: "/", state: "directory"}
+      - {path: "/roles", state: "directory"}
+      - {path: "/group_vars", state: "directory"}
+      - {path: "/host_vars", state: "directory"}
+      - {path: "/library", state: "directory"}
+    
+    - name: Create 1 level files.
+      file: path="{{root_path}}{{project_name}}{{item.path}}" state="{{item.state}}"
+      with_items:
+      - {path: "/production", state: "touch"}
+      - {path: "/staging", state: "touch"}
+      - {path: "/site.yml", state: "touch"}
+      - {path: "/webservers.yml", state: "touch"}
+      - {path: "/dbservers.yml", state: "touch"}
+      
+    - name: Creates Roles of project and its sub-directories
+      file: path="{{root_path}}{{project_name}}/roles/{{item[0]}}/{{item[1]}}" state="directory"
+      with_nested: 
+      - "{{roles}}"
+      - "{{role_sub_dirs}}"
+      
+    - name: Creates mail.yml in roles every sub-directory
+      file: path="{{root_path}}{{project_name}}/roles/{{item[0]}}/{{item[1]}}/{{item[2]}}" state="touch"
+      with_nested: 
+      - "{{roles}}"
+      - "{{role_sub_dirs}}"
+      - "{{files_in_role_sub_dirs}}"
