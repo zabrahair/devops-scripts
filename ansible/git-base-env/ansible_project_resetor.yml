@@ -1,0 +1,16 @@
+---
+
+- name: Reset Ansible_Project Running Result
+  hosts: localhost
+  gather_facts: no
+  vars:
+    - root_path="./"
+    - project_name="demo_ansible_project"
+    - roles:
+      - "ubuntu"
+      - "centos"
+      - "windows"
+  tasks:
+    - name: Remove project folder
+      file: path="{{root_path}}{{project_name}}" state=absent
+  
