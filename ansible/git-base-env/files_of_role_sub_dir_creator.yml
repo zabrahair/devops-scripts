@@ -1,0 +1,20 @@
+---
+
+- set_fact: role_name="{{item}}"
+- name: Creates mail.yml in roles every sub-directory
+  file: path="{{root_path}}{{project_name}}/roles/{{role_name}}/{{item.key}}/{{item.value.file}}" state="touch"
+  with_dict: 
+    tasks:
+      file: "main.yml"
+    handlers:
+      file: "main.yml"
+    templates:
+      file: "default.j2"
+    files:
+      file: "foo.txt"
+    vars:
+      file: "main.yml"
+    defaults:
+      file: "main.yml"
+    meta:
+      file: "main.yml"

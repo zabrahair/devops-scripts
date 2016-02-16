@@ -1,0 +1,6 @@
+[db-nodes]
+localhost
+
+[app-nodes]
+localhost
+192.168.16.114

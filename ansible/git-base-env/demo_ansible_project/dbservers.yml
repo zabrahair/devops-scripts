@@ -1,0 +1,11 @@
+---
+
+- name: Config DB
+  hosts: db-nodes
+  tasks:
+  - name: Debug DB Hosts Group Vars
+    debug: msg={{db_group_nm}}
+  - debug: msg={{db_default_port}}
+  - name: Debug Host Vars
+    debug: msg={{hostname}}
+  - debug: msg={{ssh_port}}  

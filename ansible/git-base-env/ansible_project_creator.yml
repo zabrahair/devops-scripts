@@ -22,7 +22,7 @@
     - "defaults"
     - "meta"
   - files_in_role_sub_dirs:
-    - 'main.yml'
+    - main.yml
   tasks:
     - name: Create Project Directory and 1 level directories.
       file: path="{{root_path}}{{project_name}}{{item.path}}" state="{{item.state}}"
@@ -48,9 +48,15 @@
       - "{{roles}}"
       - "{{role_sub_dirs}}"
       
-    - name: Creates mail.yml in roles every sub-directory
-      file: path="{{root_path}}{{project_name}}/roles/{{item[0]}}/{{item[1]}}/{{item[2]}}" state="touch"
-      with_nested: 
+#    - name: Creates mail.yml in roles every sub-directory
+#      file: path="{{root_path}}{{project_name}}/roles/{{item[0]}}/{{item[1]}}/{{item[2]}}" state="touch"
+#      with_nested: 
+#      - "{{roles}}"
+#      - "{{role_sub_dirs}}"
+#      - "{{files_in_role_sub_dirs}}"
+      
+    - name: Tries embed loops for tasks
+      tags: now
+      include: 'files_of_role_sub_dir_creator.yml'
+      with_items:
       - "{{roles}}"
-      - "{{role_sub_dirs}}"
-      - "{{files_in_role_sub_dirs}}"

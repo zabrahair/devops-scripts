@@ -1,0 +1,11 @@
+---
+
+- name: Config App Nodes
+  hosts: app-nodes
+  tasks:
+  - name: Debug App Hosts Group Vars
+    debug: msg={{app_group_nm}}
+  - debug: msg={{app_default_port}}
+  - name: Debug Host Vars
+    debug: msg={{hostname}}
+  - debug: msg={{ssh_port}}    

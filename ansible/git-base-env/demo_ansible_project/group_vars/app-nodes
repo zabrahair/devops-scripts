@@ -1,0 +1,4 @@
+---
+
+app_group_nm: "OpenStack Controller App Nodes"
+app_default_port: 8080

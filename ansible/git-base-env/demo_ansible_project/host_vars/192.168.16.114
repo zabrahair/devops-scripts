@@ -1,0 +1,6 @@
+---
+
+hostname: "Comp Git Server 192.168.16.114"
+#default setting which can be hidden.
+ansible_connection: ssh
+ssh_port: 22
