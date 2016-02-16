@@ -1,0 +1,4 @@
+---
+
+- name: Task Debug Ubuntu Role Vars
+  debug: msg=“{{ubuntu_version}}”

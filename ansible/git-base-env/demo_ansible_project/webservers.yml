@@ -8,4 +8,8 @@
   - debug: msg={{app_default_port}}
   - name: Debug Host Vars
     debug: msg={{hostname}}
-  - debug: msg={{ssh_port}}    
+  - debug: msg={{ssh_port}}
+  roles:
+  - {name: "ubuntu", tags: ["ubuntu"]}
+  - {name: "centos", tags: "centos"}
+  - {name: "windows", tags: "windows"}

@@ -1,0 +1,4 @@
+---
+
+- name: Task Debug Centos Role Vars
+  debug: msg=“{{os_version}}”
