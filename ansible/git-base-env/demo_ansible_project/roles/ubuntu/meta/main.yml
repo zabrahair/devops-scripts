@@ -1,0 +1,4 @@
+---
+
+dependencies:
+  - { role: common, some_parameter: I am a String }

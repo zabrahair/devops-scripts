@@ -1,4 +1,13 @@
 ---
 
+# from vars folder
+- include_vars: other.yml
+# from default folder
+- include_vars: defaults/another.yml 
+
 - name: Task Debug Windows Role Vars
   debug: msg={{os_version}}
+- debug: msg="os_alias= {{os_alias}}"
+- name: Windows Role Default Vars
+  debug: msg=os_type={{os_type}}
+- debug: msg=os_bit:{{os_bit}}

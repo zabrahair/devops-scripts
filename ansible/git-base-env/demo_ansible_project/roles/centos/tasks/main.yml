@@ -1,4 +1,14 @@
 ---
 
-- name: Task Debug Centos Role Vars
+# from vars folder
+- include_vars: vars/other.yml
+# from default folder
+- include_vars: defaults/another.yml 
+
+- name: Task Debug OS Role Vars
   debug: msg=“{{os_version}}”
+- debug: msg=os_alias={{os_alias}}
+- name: OS Role Default Vars
+  debug: msg=os_type={{os_type}}
+- debug: msg=os_dist={{os_dist}}
+- debug: msg=os_bit={{os_bit}}

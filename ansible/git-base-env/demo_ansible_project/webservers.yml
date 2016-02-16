@@ -9,7 +9,14 @@
   - name: Debug Host Vars
     debug: msg={{hostname}}
   - debug: msg={{ssh_port}}
+  - name: Default Vars
+    debug: msg={{os_type}}
   roles:
   - {name: "ubuntu", tags: ["ubuntu"]}
   - {name: "centos", tags: "centos"}
+  - {name: "windows", tags: "windows"}
+  
+- name: Config App Nodes 2
+  hosts: app-nodes
+  roles:
   - {name: "windows", tags: "windows"}

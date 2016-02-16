@@ -1,0 +1,6 @@
+---
+
+vars_files: 
+- defaults/other
+
+os_type: Linux

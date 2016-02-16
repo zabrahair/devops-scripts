@@ -2,10 +2,14 @@
 
 - name: Config DB
   hosts: db-nodes
+  tags: db
   tasks:
   - name: Debug DB Hosts Group Vars
     debug: msg={{db_group_nm}}
   - debug: msg={{db_default_port}}
   - name: Debug Host Vars
     debug: msg={{hostname}}
-  - debug: msg={{ssh_port}}  
+  - debug: msg={{ssh_port}}
+  - name: db user and password
+    debug: msg=db_user={{db_user}}
+  - debug: msg=db_pass={{db_pass}}
