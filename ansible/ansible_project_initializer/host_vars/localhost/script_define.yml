@@ -10,8 +10,8 @@ first_level_dirs:
   - {path: "library", state: "directory"}
 
 first_level_files:
-  - {path: 'production', state: 'touch'}
-  - {path: 'staging', state: 'touch'}
+  - {path: 'production.ini', state: 'touch'}
+  - {path: 'staging.ini', state: 'touch'}
   - {path: 'main.yml', state: 'touch'}
 #  - {path: 'webservers.yml', state: 'touch'}
 #  - {path: 'dbservers.yml', state: 'touch'}
