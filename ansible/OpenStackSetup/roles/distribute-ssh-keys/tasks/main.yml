@@ -1,4 +1,6 @@
 ---
 
-- name: Test
-  debug: msg="TEST"
+# generate key pair in localhost
+- include: generate_key_pair.yml
+# distribute public keys to remote hosts
+- include: distribute_keys.yml

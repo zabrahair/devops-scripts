@@ -1,12 +1,46 @@
 ---
 
-- name: Install sshpass in local environment
-#  delegate_to: localhost  #do this task in localhost ever if whole tasks are for remote hosts.
-  become: yes
-  homebrew: name='http://git.io/sshpass.rb' state=installed update_homebrew=yes
+#- name: Install sshpass in local environment
+##  delegate_to: localhost  #do this task in localhost ever if whole tasks are for remote hosts.
+#  become: yes
+#  homebrew: name='http://git.io/sshpass.rb' state=installed update_homebrew=yes
+#  ignore_errors: yes
 
-- name: Improve Task in Local
-#  delegate_to: localhost
-  command: ls -l ./
-  register: result
-- debug: msg={{result}}
+
+# Disable host key checking in ssh connecting.
+- stat: path=~/.ansible.cfg.original
+  register: fs
+- debug: msg=fs={{fs}}
+- name: Backup original file
+  copy: src=~/.ansible.cfg dest=~/.ansible.cfg.original
+  when: fs.stat.exists is defined and fs.stat.exists == False
+  ignore_errors: yes
+
+- name: Disable host key checking
+  lineinfile:
+    dest=~/.ansible.cfg
+    backup=no
+    create=yes
+    backrefs=no
+    state="{{item.state}}"
+    regexp="{{item.regexp}}"
+    line="{{item.line}}"
+  with_items:
+    - {state: 'present', line: '[defaults]', regexp: '^\[defaults\]$', }
+    - {state: 'present', line: 'host_key_checking = False', regexp: '^host_key_checking.*$'}
+  ignore_errors: yes
+
+- lineinfile:
+    dest=~/.ssh/config
+    backup=no
+    create=yes
+    backrefs=no
+    state="{{item.state}}"
+    regexp="{{item.regexp}}"
+    line="{{item.line}}"
+  with_items:
+    - {state: 'present', line: 'Host *', regexp: '^Host \*$', }
+    - {state: 'present', line: '   StrictHostKeyChecking no', regexp: '^   StrictHostKeyChecking.*$'}
+  ignore_errors: yes
+#  when: fs.stat.ass is defined
+

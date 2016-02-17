@@ -1,0 +1,7 @@
+---
+
+- name: test
+  command: ls -l
+  register: result
+  delegate_to: os-n1
+- debug: msg=result={{result}}

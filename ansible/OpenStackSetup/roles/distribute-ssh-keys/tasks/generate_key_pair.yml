@@ -1,0 +1,7 @@
+---
+
+- name: Generate ssh key pair for cluster nodes
+  stat: path=~/.ssh/openstack_rsa
+  register: fs
+- command: ssh-keygen -t rsa -f ~/.ssh/openstack_rsa -q -N ""
+  when: fs.stat.exists is defined and fs.stat.exists == False

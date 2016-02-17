@@ -1,3 +1,4 @@
 #!/bin/bash
 
-ansible-playbook -i production.ini main.yml --ask-become- -t prepare
+ansible-playbook -i production.ini main.yml -t prepare
+# --ask-become-pass

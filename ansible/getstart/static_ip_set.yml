@@ -21,7 +21,10 @@
     \n    address 192.168.16.114
     \n    mask 255.255.255.255
     \n    gateway 192.168.16.1'}
+    notify:
+      - Restart Network Service
     
+  handlers: 
   - name: Restart Network Service
     sudo: yes
     service: name=networking state=restarted
