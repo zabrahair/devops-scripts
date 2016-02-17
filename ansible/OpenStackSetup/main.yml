@@ -1,0 +1,20 @@
+---
+
+
+- name: Test Tasks
+  hosts: remote-hosts
+  gather_facts: no
+
+
+- name: Test Tasks
+  hosts: remote-hosts
+  gather_facts: yes
+  tags: test
+  tasks:
+  - name: Debug Vars
+    debug: msg=ansible_os_family={{ansible_os_family}}
+  roles:
+  - {role: ubuntu, when: ansible_os_family == 'Debian' }
+
+
+

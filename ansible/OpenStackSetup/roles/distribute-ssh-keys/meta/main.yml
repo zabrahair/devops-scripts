@@ -1,0 +1,5 @@
+---
+
+
+dependencies:
+  - { role: control-node-prepare, some_parameter: I am a String }

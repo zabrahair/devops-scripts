@@ -1,0 +1,4 @@
+---
+# encrypt is necessary
+ansible_user: openstack
+ansible_ssh_pass: pass2Openstack
