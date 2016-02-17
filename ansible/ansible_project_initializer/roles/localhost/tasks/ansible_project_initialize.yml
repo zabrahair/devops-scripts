@@ -1,0 +1,22 @@
+---
+
+- name: Create Project Directory and 1st level directories.
+  file: path="{{root_path}}/{{project_name}}/{{item.path}}" state="{{item.state}}"
+  with_items: "{{first_level_dirs}}"
+
+- name: Create 1st level files.
+  file: path="{{root_path}}/{{project_name}}/{{item.path}}" state="{{item.state}}"
+  with_items: "{{first_level_files}}"
+  
+- name: Creates Roles of project and its sub-directories
+  file: path="{{root_path}}/{{project_name}}/{{roles_dir_nm}}/{{item[0]}}/{{item[1]}}" state="directory"
+  with_nested: 
+  - "{{roles}}"
+  - "{{role_sub_dirs}}"
+  
+- name: Creates files under every role subdirs.
+  tags: now
+  include: 'role_subdir_files_initialize.yml'
+  with_items: "{{roles}}"
+
+- debug: msg="Project named "{{project_name}}" is created at {{root_path}}/{{project_name}}/"

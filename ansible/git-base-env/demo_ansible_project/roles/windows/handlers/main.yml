@@ -1,0 +1,7 @@
+---
+
+
+- name: playbook end
+  debug: msg="Playbook for Windows role is Ended."
+- name: playbook executed some commands
+  debug: msg="Playbook for Windows role Executed some commands."

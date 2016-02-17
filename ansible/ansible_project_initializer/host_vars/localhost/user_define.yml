@@ -1,0 +1,10 @@
+---
+
+#-- Variables for Project rules --#
+ 
+root_path: ".."
+
+project_name: "project_name"
+
+roles:
+- 'localhost'

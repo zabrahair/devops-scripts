@@ -14,8 +14,8 @@
   roles:
   - {name: "ubuntu", tags: ["ubuntu"]}
   - {name: "centos", tags: "centos"}
-  - {name: "windows", tags: "windows"}
-  
+#  - {name: "windows", tags: "windows"}
+
 - name: Config App Nodes 2
   hosts: app-nodes
   roles:

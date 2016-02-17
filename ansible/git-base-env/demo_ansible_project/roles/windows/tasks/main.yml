@@ -11,3 +11,11 @@
 - name: Windows Role Default Vars
   debug: msg=os_type={{os_type}}
 - debug: msg=os_bit:{{os_bit}}
+- name: template configuration file
+  template: src=default.j2 dest=~/foo.conf
+  notify:
+     - playbook end
+- name: command executed
+  command: ls
+  notify:
+     - playbook executed some commands

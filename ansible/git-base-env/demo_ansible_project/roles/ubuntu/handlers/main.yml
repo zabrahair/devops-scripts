@@ -1,0 +1,7 @@
+---
+
+
+- name: playbook end
+  debug: msg="Playbook for Ubuntu role is Ended."
+- name: playbook executed some commands
+  debug: msg="Playbook for Ubuntu role Executed some commands."

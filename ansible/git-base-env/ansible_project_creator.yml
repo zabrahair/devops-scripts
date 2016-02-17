@@ -1,5 +1,8 @@
 ---
 
+include_vars:
+- script_vars.yml
+
 - name: Create Ansible Project Structure
   hosts: localhost
   gather_facts: no

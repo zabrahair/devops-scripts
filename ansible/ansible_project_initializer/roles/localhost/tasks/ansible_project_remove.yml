@@ -1,0 +1,8 @@
+---
+
+- name: Remove project folder
+  file: path="{{root_path}}/{{project_name}}" state=absent
+
+- debug: msg="Project named "{{project_name}}" is removed at {{root_path}}/{{project_name}}/"
+
+  

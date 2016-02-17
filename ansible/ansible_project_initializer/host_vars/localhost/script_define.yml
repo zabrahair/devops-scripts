@@ -1,0 +1,45 @@
+---
+
+#-- Variables for Project rules --#
+
+first_level_dirs:
+  - {path: "", state: "directory"}
+  - {path: "roles", state: "directory"}
+  - {path: "group_vars", state: "directory"}
+  - {path: "host_vars", state: "directory"}
+  - {path: "library", state: "directory"}
+
+first_level_files:
+  - {path: 'production', state: 'touch'}
+  - {path: 'staging', state: 'touch'}
+  - {path: 'main.yml', state: 'touch'}
+#  - {path: 'webservers.yml', state: 'touch'}
+#  - {path: 'dbservers.yml', state: 'touch'}
+
+roles_dir_nm: 'roles'
+
+role_sub_dirs: 
+  - ''
+  - 'tasks'
+  - 'handlers'
+  - 'templates'
+  - 'files'
+  - 'vars'
+  - 'defaults'
+  - 'meta'
+
+role_subdir_files:
+  tasks:
+    file: 'main.yml'
+  handlers:
+    file: 'main.yml'
+  templates:
+    file: 'default.j2'
+  files:
+    file: 'foo.txt'
+  vars:
+    file: 'main.yml'
+  defaults:
+    file: 'main.yml'
+  meta:
+    file: 'main.yml'

@@ -1,0 +1,7 @@
+---
+
+- include: 'ansible_project_initialize.yml'
+  tags: init
+  
+- include: 'ansible_project_remove.yml'
+  tags: remove
