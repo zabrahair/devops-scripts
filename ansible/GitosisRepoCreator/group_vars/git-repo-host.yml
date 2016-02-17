@@ -1,0 +1,11 @@
+---
+
+usr_for_git: git
+group_for_git: git
+#cisco,123!
+usr_pwd_for_git: $6$rounds=656000$w/nEyc./NBpomuq.$i8ahgZ4bwqhQV1lQW.Pm1dZTC44Vv2wRV/xd27dAvoUWyTPKaU8GfkT9HDUG7xnztaFk.vYhjxD8nQsy62Sxj1
+global_git_usr: deanwang
+global_git_usr_email: wzq@systec.com.cn
+gitosis_dir_nm: gitosis
+git_repo_root: repositories
+gollum_repo_nm: gollum-wiki.git

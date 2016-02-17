@@ -1,0 +1,31 @@
+- name: Install necessary packages for Gollum
+  tags: gollum
+  apt: pkg={{item}} state=installed update_cache=true
+  with_items:
+    - apache2
+    - ruby
+    - ruby-dev
+    - make
+    - build-essential
+    - libiconv*
+    - libicu-dev
+    - zlib1g-dev
+
+- name: Install Gollum(Git Wiki)
+  tags: gollum
+  gem: name=gollum state=present user_install=no include_dependencies=yes
+- command: gollum --v
+  tags: gollum
+  register: version_out
+- debug: msg={{item}}
+  tags: gollum
+  with_items:
+    - "{{version_out.stdout}}"
+    - "{{version_out.stderr}}"
+
+- name: Create Gollum Wiki Repository
+  tags: gollum
+  command: sudo -i -u {{usr_for_git}} git init /home/{{usr_for_git}}/{{git_repo_root}}/{{gollum_repo_nm}}
+  register: output
+- debug: msg={{output.stdout}}
+  tags: gollum

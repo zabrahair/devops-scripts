@@ -1,0 +1,4 @@
+---
+# encrypt is necessary
+ansible_user: deanwang
+#ansible_ssh_pass:

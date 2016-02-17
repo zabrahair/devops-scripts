@@ -1,0 +1,33 @@
+---
+
+- name: Install Default Packages
+  tags: gitosis git
+  apt: pkg={{item}} state=installed update_cache=true
+  with_items:
+    - id-utils
+    - openssh-client
+    - python-setuptools
+
+- name: Install Git Packages
+  tags: gitosis git
+  apt: pkg={{item}} state=installed update_cache=true
+  with_items:
+    - git-core
+    - git-daemon-run
+
+
+- name: Create Git Group
+  tags: git
+  group: name={{group_for_git}} state=present
+
+- debug: msg=usr_pwd_for_git={{usr_pwd_for_git}}
+- name: Create Git User
+  tags: git
+  user: name={{usr_for_git}} group={{group_for_git}} state=present createhome=yes password="{{usr_pwd_for_git}}"
+
+- name: Config Global User of Git
+  tags: git
+  command: "{{item}}"
+  with_items:
+    - "sudo -iu {{usr_for_git}} git config --global user.name {{global_git_usr}}"
+    - "sudo -iu {{usr_for_git}} git config --global user.email {{global_git_usr_email}}"

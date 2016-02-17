@@ -1,0 +1,33 @@
+---
+
+- name: Remove Default Packages
+  apt: pkg={{item}} state=absent
+  with_items:
+    - id-utils
+    - python-setuptools
+
+- name: Remove Git Packages
+  apt: pkg={{item}} state=absent
+  with_items:
+    - git-core
+    - git-daemon-run
+
+- name: Remove necessary packages for Gollum
+  apt: pkg={{item}} state=absent
+  with_items:
+    - apache2
+    - ruby
+    - ruby-dev
+    - make
+    - build-essential
+    - libiconv*
+    - libicu-dev
+    - zlib1g-dev
+
+- name: Remove User of Git
+  user: name={{usr_for_git}} remove=yes state=absent
+- group: name={{usr_for_git}} state=absent
+
+- name: Remove Gollum(Git Wiki)
+  gem: name=gollum state=absent
+  ignore_errors: yes

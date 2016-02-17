@@ -1,0 +1,30 @@
+---
+
+- name: Setup Git and Gollum Markdown Wiki
+  hosts: git-repo-host
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: su
+  tags: install
+  tasks:
+  - name: Debug Vars
+    debug: msg=ansible_os_family={{ansible_os_family}}
+  roles:
+  - {role: ubuntu, when: ansible_os_family == 'Debian', job_name: "install_git" }
+  - {role: ubuntu, when: ansible_os_family == 'Debian', job_name: "setup_gitosis" }
+  - {role: ubuntu, when: ansible_os_family == 'Debian', job_name: "setup_gollum" }
+  - {role: ubuntu, when: ansible_os_family == 'Debian', job_name: "create_test_repo" }
+
+- name: Remove Git and Gollum Markdown Wiki
+  hosts: git-repo-host
+  gather_facts: yes
+  tags: remove
+  become: yes
+  become_user: root
+  become_method: su
+  tasks:
+  - name: Debug Vars
+    debug: msg=ansible_os_family={{ansible_os_family}}
+  roles:
+  - {role: ubuntu, when: ansible_os_family == 'Debian', job_name: "remove_all" }

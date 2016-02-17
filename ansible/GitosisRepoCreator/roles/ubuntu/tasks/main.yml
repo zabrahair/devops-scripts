@@ -1,0 +1,4 @@
+---
+
+- debug: msg="current job name is {{job_name}}"
+- include: "{{job_name}}.yml"

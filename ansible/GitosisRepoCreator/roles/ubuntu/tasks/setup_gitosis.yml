@@ -1,0 +1,69 @@
+---
+
+- name: Clone Gitosis Package
+  tags: gitosis
+  git: repo=https://github.com/res0nat0r/gitosis.git dest=/home/{{usr_for_git}}/{{gitosis_dir_nm}}
+- file: path=/home/{{usr_for_git}}/{{gitosis_dir_nm}} group={{group_for_git}} owner={{usr_for_git}} recurse=yes
+
+- name: Show Current User
+  tags: gitosis
+  command: id
+  register: out
+- debug: msg="{{out.stdout}}"
+  tags: gitosis
+
+- name: Install Gitosis
+  tags: gitosis
+  command: python setup.py install
+  args:
+    chdir:  /home/{{usr_for_git}}/gitosis
+
+
+- name: Generate SSH key-pair
+  tags: gitosis
+  stat: path=/home/{{usr_for_git}}/.ssh/id_rsa
+  register: idrsa_state
+- debug: msg="idrsa_state is {{ idrsa_state.stat.exists }}"
+  tags: gitosis
+- debug: msg="id_rsa is not existed"
+  tags: gitosis
+  when: idrsa_state.stat.exists == False
+- command: su - {{usr_for_git}} -c "ssh-keygen -t rsa -f /home/{{usr_for_git}}/.ssh/id_rsa -q -N ''"
+  tags: gitosis
+  when: idrsa_state.stat.exists == False
+- debug: msg="id_rsa key-pair is existed."
+  tags: gitosis
+  when: idrsa_state.stat.exists == True
+- file: path=/home/{{usr_for_git}}/.ssh/authorized_keys owner={{usr_for_git}} group={{group_for_git}} mode=0644 state=touch
+  tags: gitosis
+- command: cat /home/{{usr_for_git}}/.ssh/id_rsa.pub >> /home/{{usr_for_git}}/.ssh/authorized_keys
+  tags: gitosis
+  args:
+    creates: /home/{{usr_for_git}}/.ssh/authorized_keys
+
+
+- name: Copy local id_rsa.pub to Git Server Path /tmp/
+  tags: gitosis
+  copy: src=~/.ssh/id_rsa.pub dest=/tmp/gitosis_idrsa.pub
+
+- name: Gitosis Initial
+  tags: gitosis
+  shell: "sudo -i -u {{usr_for_git}} gitosis-init < /tmp/gitosis_idrsa.pub"
+  register: gitinit_out
+- debug: msg="{{ item }} "
+  tags: gitosis
+  with_items:
+    - "{{ gitinit_out.stdout }} "
+    - "{{ gitinit_out.stderr }}"
+- name: Delete The public key
+  tags: gitosis
+  file: path=/tmp/gitosis_idrsa.pub state=absent
+- name: Change Access Permission of Git Repo
+  tags: gitosis
+  file:
+    path="/home/{{usr_for_git}}/repositories"
+    owner={{usr_for_git}}
+    group={{group_for_git}}
+    mode=0755
+    state=directory
+    recurse=yes

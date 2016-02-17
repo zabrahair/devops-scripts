@@ -1,0 +1,9 @@
+---
+#ansible internal vars
+ansible_connection: ssh
+ansible_port: 22
+ansible_host: 173.0.63.185
+
+#user defines
+keystore_dir: ~/.ssh
+

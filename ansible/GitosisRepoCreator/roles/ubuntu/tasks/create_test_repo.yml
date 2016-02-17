@@ -1,0 +1,6 @@
+---
+
+- name: Create a Bare repository named test.git
+  command: sudo -i -u {{usr_for_git}} git init --bare test.git
+  args:
+   chdir: "/home/{{usr_for_git}}/{{repos_root}}"
