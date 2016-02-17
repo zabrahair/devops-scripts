@@ -1,9 +1,14 @@
 ---
 
-
-- name: Test Tasks
-  hosts: remote-hosts
+- name: Control Node Prepare
+  hosts: localhost
   gather_facts: no
+  tags: prepare
+  roles:
+  - general-prepare
+  - distribute-ssh-keys
+
+
 
 
 - name: Test Tasks

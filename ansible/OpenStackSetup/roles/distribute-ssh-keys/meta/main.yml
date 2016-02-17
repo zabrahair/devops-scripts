@@ -1,5 +1,5 @@
 ---
 
 
-dependencies:
-  - { role: control-node-prepare, some_parameter: I am a String }
+#dependencies:
+#  - { role: general-prepare, some_parameter: I am a String }

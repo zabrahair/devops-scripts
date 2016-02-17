@@ -1,0 +1,12 @@
+---
+
+- name: Install sshpass in local environment
+#  delegate_to: localhost  #do this task in localhost ever if whole tasks are for remote hosts.
+  become: yes
+  homebrew: name='http://git.io/sshpass.rb' state=installed update_homebrew=yes
+
+- name: Improve Task in Local
+#  delegate_to: localhost
+  command: ls -l ./
+  register: result
+- debug: msg={{result}}
