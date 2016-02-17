@@ -13,9 +13,10 @@
   with_nested: 
   - "{{roles}}"
   - "{{role_sub_dirs}}"
-  
+
+- debug: msg=roles={{roles}}
+
 - name: Creates files under every role subdirs.
-  tags: now
   include: 'role_subdir_files_initialize.yml'
   with_items: "{{roles}}"
 
