@@ -7,3 +7,12 @@ ansible_host: 192.168.16.183
 #user defines
 keystore_dir: ~/.ssh
 
+#network interfaces
+net_interfaces:
+  eth0:
+    type: manage-network
+    mode: static
+    ip: 192.168.16.183
+    mask: 255.255.255.0
+    gateway: 192.168.16.1
+

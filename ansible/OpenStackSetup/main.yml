@@ -11,15 +11,17 @@
 
 
 
-- name: Test Tasks
+- name: OpenStack Nodes Common Config
   hosts: remote-hosts
   gather_facts: yes
-  tags: test
+  tags: ['openstack','install', 'setup', 'common', 'now']
   tasks:
   - name: Debug Vars
     debug: msg=ansible_os_family={{ansible_os_family}}
   roles:
-  - {role: ubuntu, when: ansible_os_family == 'Debian' }
+  - {role: network, when: ansible_os_family == 'Debian', tasks_stage: 'network_interfaces_config'}
+#  - {role: major-config, when: ansible_os_family == 'Debian', tasks_stage='install_packages'}
+
 
 
 

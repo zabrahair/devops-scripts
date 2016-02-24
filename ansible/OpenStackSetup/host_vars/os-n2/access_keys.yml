@@ -2,3 +2,4 @@
 # encrypt is necessary
 ansible_user: openstack
 ansible_ssh_pass: pass2Openstack
+ansible_become_pass: pass2Openstack

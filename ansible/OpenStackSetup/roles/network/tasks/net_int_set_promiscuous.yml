@@ -16,8 +16,8 @@
   \n    up ip link set dev $IFACE up
   \n    down ip link set dev $IFACE down
   \n"}
-#    notify:
-#      - Restart Network Service
+  notify:
+    - Restart Network Service
 
 - debug: msg=replace_try={{replace_try}}
 
@@ -38,7 +38,7 @@
   \n    down ip link set dev $IFACE down
   \n"}
   when: replace_try is undefined or replace_try.changed == False
-#    notify:
-#      - Restart Network Service
+  notify:
+    - Restart Network Service
 
 - debug: msg=insert_try={{insert_try}}

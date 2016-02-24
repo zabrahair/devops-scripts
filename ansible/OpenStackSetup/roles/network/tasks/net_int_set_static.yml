@@ -17,8 +17,8 @@
   \n    mask {{net_int_params.value.mask}}
   \n    gateway {{net_int_params.value.gateway}}
   \n"}
-#    notify:
-#      - Restart Network Service
+  notify:
+    - Restart Network Service
 
 - debug: msg=replace_try={{replace_try}}
 
@@ -40,7 +40,7 @@
   \n    gateway {{net_int_params.value.gateway}}
   \n"}
   when: replace_try is undefined or replace_try.changed == False
-#    notify:
-#      - Restart Network Service
+  notify:
+    - Restart Network Service
 
 - debug: msg=insert_try={{insert_try}}

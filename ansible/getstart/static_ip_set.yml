@@ -23,8 +23,8 @@
     \n    gateway 192.168.16.1'}
     notify:
       - Restart Network Service
-    
-  handlers: 
+
+  handlers:
   - name: Restart Network Service
     sudo: yes
     service: name=networking state=restarted
