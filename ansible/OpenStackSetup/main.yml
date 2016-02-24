@@ -14,7 +14,7 @@
 - name: OpenStack Nodes Common Config
   hosts: remote-hosts
   gather_facts: yes
-  tags: ['openstack','install', 'setup', 'common', 'now']
+  tags: ['openstack','install', 'setup', 'common']
   tasks:
   - name: Debug Vars
     debug: msg=ansible_os_family={{ansible_os_family}}
@@ -22,6 +22,11 @@
   - {role: network, when: ansible_os_family == 'Debian', tasks_stage: 'network_interfaces_config'}
 #  - {role: major-config, when: ansible_os_family == 'Debian', tasks_stage='install_packages'}
 
+
+- name: Controller Node Config
+  hosts: controller-nodes
+  gather_facts:yes
+  tags: ['openstack','controller','now']
 
 
 
