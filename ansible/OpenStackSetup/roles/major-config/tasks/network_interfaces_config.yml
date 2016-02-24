@@ -1,0 +1,6 @@
+---
+
+- name: Set Network Interfaces Address
+  #debug: msg="outside debug mode of interface is {{item.value.mode}}"
+  include: "net_int_set_address.yml"
+  with_dict: "{{net_interfaces}}"

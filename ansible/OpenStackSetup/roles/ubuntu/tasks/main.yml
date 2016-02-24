@@ -1,4 +1,0 @@
----
-
-- name: Start Tests
-  debug: msg="Start test!"
