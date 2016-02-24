@@ -1,0 +1,46 @@
+---
+
+- debug: msg="Host {{ansible_host}} is being set network interfaces."
+
+- name: Replaces interface setting
+  become: yes
+  register: replace_try
+  replace:
+    dest=/etc/network/interfaces
+    backup=yes
+    regexp="^auto {{net_int_params.key}}.*(\n[^\n]+)*(?=\n[\t\s]*\n)"
+    replace="{{item.line}}"
+  with_items:
+  - {state: 'present', line: "auto {{net_int_params.key}}
+  \niface {{net_int_params.key}} inet static
+  \n    address {{net_int_params.value.ip}}
+  \n    mask {{net_int_params.value.mask}}
+  \n    gateway {{net_int_params.value.gateway}}
+  \n"}
+#    notify:
+#      - Restart Network Service
+
+- debug: msg=replace_try={{replace_try}}
+
+- name: Inserts interface setting
+  become: yes
+  register: insert_try
+  lineinfile:
+    dest=/etc/network/interfaces
+    backup=yes
+    create=yes
+    state="{{item.state}}"
+    regexp="^auto {{net_int_params.key}}.*(\n[^\n]+)*(?=\n[\t\s]*\n)"
+    line="{{item.line}}"
+  with_items:
+  - {state: 'present', line: "auto {{net_int_params.key}}
+  \niface {{net_int_params.key}} inet static
+  \n    address {{net_int_params.value.ip}}
+  \n    mask {{net_int_params.value.mask}}
+  \n    gateway {{net_int_params.value.gateway}}
+  \n"}
+  when: replace_try is undefined or replace_try.changed == False
+#    notify:
+#      - Restart Network Service
+
+- debug: msg=insert_try={{insert_try}}

@@ -3,10 +3,12 @@
 - set_fact: net_int_params={{item}}
 
 - name: Sets static mode address
-  debug: msg="network interface {{net_int_params.key}} is in {{net_int_params.value.mode}} mode."
+#  debug: msg="network interface {{net_int_params.key}} is in {{net_int_params.value.mode}} mode."
+  include: net_int_set_static.yml
   when: net_int_params.value.mode is defined and net_int_params.value.mode == 'static'
 
 
 - name: Set promiscuous mode address
-  debug: msg="network interface {{net_int_params.key}} is in {{net_int_params.value.mode}} mode."
+#  debug: msg="network interface {{net_int_params.key}} is in {{net_int_params.value.mode}} mode."
+  include: net_int_set_promiscuous.yml
   when: net_int_params.value.mode is defined and net_int_params.value.mode == 'promiscuous'

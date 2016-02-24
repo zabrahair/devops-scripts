@@ -1,0 +1,5 @@
+---
+
+- name: Restart Network Service
+  sudo: yes
+  service: name=networking state=restarted
