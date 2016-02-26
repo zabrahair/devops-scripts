@@ -1,0 +1,3 @@
+[submodule "ansible/OpenStackSetup/roles/blockinfile"]
+	path = ansible/OpenStackSetup/roles/blockinfile
+	url = ssh://git@173.0.51.102/icontrol.git
